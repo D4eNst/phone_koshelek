@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.d4enst.laba_1_koshelek.pages.PatternsCRUD
 import com.d4enst.laba_1_koshelek.pages.PatternsList
 
 @Composable
@@ -15,11 +16,20 @@ fun NavContent(
 ){
     NavHost(
         navController = navController,
-        startDestination = Page.MAIN.route,
+        startDestination = Page.PATTERNS_LIST.route,
         modifier = modifier,
     ){
-        composable(Page.MAIN.route){
-            PatternsList(navController, Modifier.fillMaxSize())
+        composable(Page.PATTERNS_LIST.route){
+            PatternsList(
+                navController,
+                Modifier.fillMaxSize()
+            )
+        }
+        composable(Page.PATTERN_CRUD.route){
+            PatternsCRUD(
+                navController,
+                Modifier.fillMaxSize()
+            )
         }
     }
 }

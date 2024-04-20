@@ -2,29 +2,27 @@ package com.d4enst.laba_1_koshelek.pages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
-import com.d4enst.laba_1_koshelek.R
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.d4enst.laba_1_koshelek.navigation.Page
+import com.d4enst.laba_1_koshelek.R
 import com.d4enst.laba_1_koshelek.ui.theme.Laba_1_koshelekTheme
 
 @Composable
-fun PatternsList(
+fun PatternsCRUD(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ){
@@ -33,7 +31,7 @@ fun PatternsList(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Page.PATTERN_CRUD.route)
+                    // todo add
                 }
             ) {
                 Icon(
@@ -50,7 +48,7 @@ fun PatternsList(
             modifier = modifier
                 .padding(innerPadding)
         ) {
-            Text(stringResource(R.string.main_text))
+            Text("CRUD")
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -58,7 +56,7 @@ fun PatternsList(
             ) {
 //                EXAMPLE:
 //                Button(onClick = {
-//                    navController.navigate(Page.PATTERN_CRUD.route)
+//                    navController.navigate(Page.DETAILS.route)
 //                }) {
 //                    Text(stringResource(R.string.btn_detail))
 //                }
@@ -70,9 +68,9 @@ fun PatternsList(
 
 @Preview(showBackground = true)
 @Composable
-fun MainPreview() {
+fun PatternsCRUDPreview() {
     val navController = rememberNavController()
     Laba_1_koshelekTheme {
-        PatternsList(navController)
+        PatternsCRUD(navController)
     }
 }

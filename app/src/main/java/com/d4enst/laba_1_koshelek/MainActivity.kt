@@ -59,7 +59,7 @@ fun MainView(position: NavBackStackEntry?, navController: NavHostController) {
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 navigationIcon = {
-                    if (position?.destination?.route != Page.MAIN.route)
+                    if (position?.destination?.route != Page.PATTERNS_LIST.route)
                         IconButton(onClick = {navController.popBackStack()}) {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_arrow_back_24),
