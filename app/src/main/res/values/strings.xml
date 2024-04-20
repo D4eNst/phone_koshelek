@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">laba_1_koshelek</string>
+    <string name="detail_text">detail text</string>
+    <string name="btn_back">back</string>
+    <string name="main_text">Main text</string>
+    <string name="btn_detail">button detail</string>
+    <string name="btn_settings">button settings</string>
+    <string name="settings_text">Settings text</string>
+    <string name="title_details">Title details</string>
+    <string name="title_settings">Title details</string>
+    <string name="title_main">Title main</string>
+    <string name="main_page_title">Patterns list</string>
+</resources>
