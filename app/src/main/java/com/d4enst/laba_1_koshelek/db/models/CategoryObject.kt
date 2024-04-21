@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     ForeignKey(
         entity = Category::class,
         parentColumns = ["id"],
-        childColumns = ["category_id"],
+        childColumns = ["id"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.RESTRICT
     )

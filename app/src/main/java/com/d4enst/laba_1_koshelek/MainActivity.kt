@@ -24,13 +24,17 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.d4enst.laba_1_koshelek.db.RepoContainer
 import com.d4enst.laba_1_koshelek.navigation.NavContent
 import com.d4enst.laba_1_koshelek.navigation.Page
 import com.d4enst.laba_1_koshelek.ui.theme.Laba_1_koshelekTheme
 
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val navController: NavHostController = rememberNavController()
             val position by navController.currentBackStackEntryAsState()

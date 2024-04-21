@@ -9,14 +9,14 @@ import androidx.room.PrimaryKey
     ForeignKey(
         entity = CategoryObject::class,
         parentColumns = ["id"],
-        childColumns = ["category_object_id"],
+        childColumns = ["id"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.RESTRICT
     ),
     ForeignKey(
         entity = CategoryLabel::class,
         parentColumns = ["id"],
-        childColumns = ["category_label"],
+        childColumns = ["id"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.RESTRICT
     )
