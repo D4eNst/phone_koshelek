@@ -3,11 +3,13 @@ package com.d4enst.laba_1_koshelek.navigation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.d4enst.laba_1_koshelek.pages.PatternsCRUD
+import com.d4enst.laba_1_koshelek.pages.PatternCRUD
 import com.d4enst.laba_1_koshelek.pages.PatternsList
+import com.d4enst.laba_1_koshelek.view_models.CategoryViewModel
 
 @Composable
 fun NavContent(
@@ -19,16 +21,21 @@ fun NavContent(
         startDestination = Page.PATTERNS_LIST.route,
         modifier = modifier,
     ){
+
         composable(Page.PATTERNS_LIST.route){
+            val categoryViewModel: CategoryViewModel = viewModel(factory= CategoryViewModel.Factory)
             PatternsList(
                 navController,
-                Modifier.fillMaxSize()
+                Modifier.fillMaxSize(),
+                categoryViewModel::getAllCategories,
             )
         }
         composable(Page.PATTERN_CRUD.route){
-            PatternsCRUD(
+            val categoryViewModel: CategoryViewModel = viewModel(factory= CategoryViewModel.Factory)
+            PatternCRUD(
                 navController,
-                Modifier.fillMaxSize()
+                Modifier.fillMaxSize(),
+                categoryViewModel::addCategory,
             )
         }
     }

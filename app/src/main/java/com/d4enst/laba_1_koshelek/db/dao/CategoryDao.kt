@@ -14,4 +14,7 @@ interface CategoryDao {
 
     @Delete(Category::class)
     suspend fun deleteCategory(category: Category)
+
+    @Query("SELECT * FROM categories")
+    fun getAll(): Flow<List<Category>>
 }
