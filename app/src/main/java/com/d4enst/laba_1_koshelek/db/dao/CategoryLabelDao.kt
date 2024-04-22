@@ -12,6 +12,9 @@ interface CategoryLabelDao {
     @Insert(CategoryLabel::class)
     suspend fun addCategoryLabel(categoryLabel: CategoryLabel)
 
+    @Insert(CategoryLabel::class)
+    suspend fun addMultipleCategoryLabel(categoryLabels: List<CategoryLabel>)
+
     @Delete(CategoryLabel::class)
     suspend fun deleteCategoryLabel(categoryLabel: CategoryLabel)
 }

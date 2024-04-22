@@ -5,8 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.d4enst.laba_1_koshelek.pages.PatternCRUD
 import com.d4enst.laba_1_koshelek.pages.PatternsList
 import com.d4enst.laba_1_koshelek.view_models.CategoryViewModel
@@ -30,12 +32,20 @@ fun NavContent(
                 categoryViewModel::getAllCategories,
             )
         }
-        composable(Page.PATTERN_CRUD.route){
+        composable(
+            Page.PATTERN_CRUD.route + "/{categoryId}",
+            arguments = listOf(
+                navArgument("categoryId") { type = NavType.LongType },
+            )
+        ){
             val categoryViewModel: CategoryViewModel = viewModel(factory= CategoryViewModel.Factory)
+            val categoryId = it.arguments?.getLong("categoryId") ?: 0L
             PatternCRUD(
                 navController,
                 Modifier.fillMaxSize(),
+                categoryId,
                 categoryViewModel::addCategory,
+
             )
         }
     }

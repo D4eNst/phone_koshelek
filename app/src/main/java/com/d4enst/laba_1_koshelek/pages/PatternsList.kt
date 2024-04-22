@@ -34,8 +34,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.d4enst.laba_1_koshelek.addParams
 import com.d4enst.laba_1_koshelek.db.models.Category
 import com.d4enst.laba_1_koshelek.navigation.Page
+import com.d4enst.laba_1_koshelek.navigation.PageParam
 import com.d4enst.laba_1_koshelek.ui.theme.Laba_1_koshelekTheme
 import com.d4enst.laba_1_koshelek.view_models.CategoryViewModel
 import kotlinx.coroutines.flow.Flow
@@ -51,7 +53,10 @@ fun PatternsList(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Page.PATTERN_CRUD.route)
+                    navController.navigate(
+                        Page.PATTERN_CRUD.route
+                            .addParams(PageParam.DEFAULT_CATEGORY.value)
+                    )
                 }
             ) {
                 Icon(
