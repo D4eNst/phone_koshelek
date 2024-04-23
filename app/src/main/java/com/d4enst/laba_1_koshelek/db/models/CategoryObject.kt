@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     ForeignKey(
         entity = Category::class,
         parentColumns = ["id"],
-        childColumns = ["id"],
+        childColumns = ["category_id"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.RESTRICT
     )
@@ -20,4 +20,7 @@ data class CategoryObject(
 
     @ColumnInfo(name = "name")
     var categoryObjectName: String = "",
+
+    @ColumnInfo(name = "category_id")
+    var categoryId: Long,
 )

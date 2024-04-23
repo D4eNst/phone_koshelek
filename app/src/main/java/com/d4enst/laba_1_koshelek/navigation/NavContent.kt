@@ -44,8 +44,7 @@ fun NavContent(
                 navController,
                 Modifier.fillMaxSize(),
                 categoryId,
-                categoryViewModel::addCategory,
-
+                categoryViewModel,
             )
         }
     }

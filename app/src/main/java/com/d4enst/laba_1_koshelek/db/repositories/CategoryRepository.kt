@@ -9,14 +9,24 @@ class CategoryRepository(
     private val categoryDao: CategoryDao,
     private val categoryLabelDao: CategoryLabelDao
 ) {
-    fun getAll() = categoryDao.getAll()
+    fun getAllCategories()
+        = categoryDao.getAll()
+
+    fun getCategoryById(categoryId: Long)
+        = categoryDao.getById(categoryId)
+
+    fun getAllCategoryLabelsByCategoryId(categoryId: Long)
+        = categoryLabelDao.getAllByCategoryId(categoryId)
 
     suspend fun addCategory(category: Category)
         = categoryDao.addCategory(category)
 
     suspend fun addMultipleCategoryLabels(categoryLabels: List<CategoryLabel>)
-        = categoryLabelDao.addMultipleCategoryLabel(categoryLabels)
+        = categoryLabelDao.addMultiple(categoryLabels)
 
     suspend fun deleteCategory(category: Category)
             = categoryDao.deleteCategory(category)
+
+    suspend fun deleteAllCategoryLabelByCategoryId(categoryId: Long)
+            = categoryLabelDao.deleteAllByCategoryId(categoryId)
 }

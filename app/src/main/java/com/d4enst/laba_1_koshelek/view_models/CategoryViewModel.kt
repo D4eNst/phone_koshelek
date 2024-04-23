@@ -8,18 +8,38 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.d4enst.laba_1_koshelek.MainApplication
 import com.d4enst.laba_1_koshelek.db.models.Category
+import com.d4enst.laba_1_koshelek.db.models.CategoryLabel
 import com.d4enst.laba_1_koshelek.db.repositories.CategoryRepository
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
-class CategoryViewModel(private val categoryRepository: CategoryRepository) : ViewModel() {
+class CategoryViewModel(
+    private val categoryRepository: CategoryRepository,
+) : ViewModel() {
     fun getAllCategories(): Flow<List<Category>>
-            = categoryRepository.getAll()
+            = categoryRepository.getAllCategories()
 
-    fun addCategory(categoryName: String) = viewModelScope.launch {
-        categoryRepository.addCategory(Category(categoryName=categoryName))
+    fun addCategory(category: Category): Deferred<Long> = viewModelScope.async {
+        categoryRepository.addCategory(category)
     }
+
+    fun addMultipleCategoryLabel(categoryLabels: List<CategoryLabel>): Deferred<List<Long>> = viewModelScope.async {
+        categoryRepository.addMultipleCategoryLabels(categoryLabels)
+    }
+
+
+    fun deleteAllCategoryLabelByCategoryId(categoryId: Long) = viewModelScope.launch {
+        categoryRepository.deleteAllCategoryLabelByCategoryId(categoryId)
+    }
+
+    fun getCategoryById(categoryId: Long)
+            = categoryRepository.getCategoryById(categoryId)
+
+    fun getAllCategoryLabelsByCategoryId(categoryId: Long)
+            = categoryRepository.getAllCategoryLabelsByCategoryId(categoryId)
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryObjectDao {
     @Insert(CategoryObject::class)
-    suspend fun addCategoryObject(categoryObject: CategoryObject)
+    suspend fun addCategoryObject(categoryObject: CategoryObject): Long
 
     @Delete(CategoryObject::class)
     suspend fun deleteCategoryObject(categoryObject: CategoryObject)

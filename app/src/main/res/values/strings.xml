@@ -12,6 +12,7 @@
     <string name="main_page_title">Patterns list</string>
     <string name="not_editable_category_title">Pattern</string>
     <string name="editable_category_title">Pattern (change mode)</string>
-    <string name="done_icon_desription">Done icon</string>
+    <string name="done_icon_description">Done icon</string>
     <string name="label_name_titile">Label name</string>
+    <string name="edit_icon_description">Edit icon</string>
 </resources>

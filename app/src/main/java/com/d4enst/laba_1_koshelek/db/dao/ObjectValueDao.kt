@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ObjectValueDao {
     @Insert(ObjectValue::class)
-    suspend fun addObjectValue(objectValue: ObjectValue)
+    suspend fun addObjectValue(objectValue: ObjectValue): Long
 
     @Delete(ObjectValue::class)
     suspend fun deleteObjectValue(objectValue: ObjectValue)

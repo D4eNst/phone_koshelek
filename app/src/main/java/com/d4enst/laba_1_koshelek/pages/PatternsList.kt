@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
@@ -80,14 +81,22 @@ fun PatternsList(
             ) {
                 items(categoryList) { category ->
                     Card(
+                        onClick = {
+                            navController.navigate(
+                                Page.PATTERN_CRUD.route
+                                    .addParams(category.id.toString())
+                            )
+                        },
                         modifier = Modifier
-                            .width(200.dp)
                             .height(80.dp)
                             .padding(vertical = 8.dp)
+                            .fillMaxSize(0.85f)
                     ) {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize(),
                             contentAlignment = Alignment.Center
+
                         ) {
                             Text(text = category.categoryName, style = MaterialTheme.typography.displaySmall)
                         }
