@@ -29,8 +29,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,13 +45,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.d4enst.laba_1_koshelek.R
-import com.d4enst.laba_1_koshelek.db.models.Category
-import com.d4enst.laba_1_koshelek.db.models.CategoryLabel
 import com.d4enst.laba_1_koshelek.view_models.CategoryViewModel
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,35 +57,17 @@ fun PatternCRUD(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     categoryId: Long,
-    categoryViewModel: CategoryViewModel,
+    viewModel: CategoryViewModel,
 ){
-    var showDialog by remember { mutableStateOf(false) }
-
     var isEditable by remember { mutableStateOf(categoryId == 0L) }
+    viewModel.currentCategoryId = categoryId
 
-    var currentCategoryId by remember { mutableLongStateOf(categoryId) }
-    var category by remember { mutableStateOf(Category()) }
-    var categoryLabels by remember { mutableStateOf<List<CategoryLabel>>(emptyList()) }
-    var categoryNameInput by remember { mutableStateOf(category.categoryName) }
-
-    val states = remember {
-        mutableStateListOf("", "")
+    LaunchedEffect(viewModel.currentCategoryId) {
+        viewModel.collectCategory()
     }
 
-    LaunchedEffect(currentCategoryId) {
-        categoryViewModel.getCategoryById(currentCategoryId).collect {
-            if (it != null)
-            {
-                category = it
-                categoryNameInput = category.categoryName
-                states[0] = categoryNameInput
-            }
-        }
-        categoryViewModel.getAllCategoryLabelsByCategoryId(currentCategoryId).collect { labels ->
-            categoryLabels = labels
-            states.subList(1, states.size).clear()
-            states.addAll(1, categoryLabels.map { it.categoryLabelName })
-        }
+    LaunchedEffect(viewModel.currentCategoryId) {
+        viewModel.collectCategoryLabels()
     }
 
     // Для скрытия клавиатуры
@@ -107,7 +84,7 @@ fun PatternCRUD(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(categoryNameInput, fontSize = 32.sp)
+                    Text(viewModel.categoryNameInput, fontSize = 32.sp)
                 },
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
@@ -116,28 +93,9 @@ fun PatternCRUD(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    if (isEditable) {
-                        if (categoryNameInput != "") {
-                            currentScope.launch {
-                                if (category.id == 0L) {
-                                    // Добавление категории, если её не существует
-                                    currentCategoryId = categoryViewModel.addCategory(category).await()
-                                }
-                                // Удаление всех CategoryLabel и создание заново
-                                categoryViewModel.deleteAllCategoryLabelByCategoryId(currentCategoryId)
-                                categoryViewModel.addMultipleCategoryLabel(
-                                    states.subList(1, states.size).map {
-                                        CategoryLabel(0L, it, currentCategoryId)
-                                    }
-                                ).await()
-                            }
-                            isEditable = false
-                        } else
-                            showDialog = true
-                    }
-                    else {
-                        isEditable = true
-                    }
+                    val changed = viewModel.createOrChangeCategory(isEditable)
+                    if (changed)
+                        isEditable = !isEditable
                 }
             ) {
                 Icon(
@@ -167,7 +125,7 @@ fun PatternCRUD(
                 state = listState,
                 contentPadding = PaddingValues(16.dp)
             ) {
-                itemsIndexed(states) { i, _ ->
+                itemsIndexed(viewModel.states) { i, _ ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -176,23 +134,27 @@ fun PatternCRUD(
 
                     ) {
                         OutlinedTextField(
-                            value = states[i],
+                            value = viewModel.states[i],
                             modifier = Modifier
                                 .padding(0.dp)
                                 .focusRequester(focusRequester),
                             onValueChange = {
-                                states[i] = it
+                                viewModel.states[i] = it
                                 if (i == 0){
-                                    categoryNameInput = it
-                                    category.categoryName = categoryNameInput
+                                    viewModel.categoryNameInput = it
+                                    viewModel.category.categoryName = it
                                 }
                             },
                             enabled = isEditable,
                             label = {
-                                Text(if (i == 0) "Название шаблона" else "${stringResource(R.string.label_name_titile)} $i")
+                                Text(
+                                    if (i == 0) stringResource(R.string.category_title_name_titile)
+                                    else "${stringResource(R.string.label_name_titile)} $i"
+                                )
                             },
                             keyboardOptions = KeyboardOptions(
-                                imeAction = if (i + 1 < states.size) ImeAction.Next else ImeAction.Done
+                                imeAction = if (i + 1 < viewModel.states.size) ImeAction.Next
+                                            else ImeAction.Done
                             ),
                             keyboardActions = KeyboardActions(
                                 onNext = {
@@ -207,23 +169,19 @@ fun PatternCRUD(
                                 }
                             ),
                         )
-                        if (i + 1 > 1 && states.size > 2)
+                        if (i + 1 > 1 && viewModel.states.size > 2 && isEditable)
                             Button(
                                 onClick = {
-                                    states.removeAt(index = i)
-                                    // Пользователь может использовать двойное нажатие и удалить сразу несколько строк
-                                    // Перестраховываюсь и добавляю поле, если он удалил все
-                                    if (states.size <= 1)
-                                        states.add("")
+                                    viewModel.removeLabelInUI(i)
                                 }
                             ) {
                                 Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.done_icon_description))
                             }
                     }
-                    if (i + 1 == states.size)
+                    if (i + 1 == viewModel.states.size && isEditable)
                         Button(
                             onClick = {
-                                states.add("")
+                                viewModel.addLabelInUI()
                                 currentScope.launch {
                                     listState.animateScrollToItem(i)
                                     focusRequester.requestFocus() // Запросить фокус
@@ -239,14 +197,14 @@ fun PatternCRUD(
         }
     }
 
-    if (showDialog)
+    if (viewModel.showDialog)
         AlertDialog(
-            onDismissRequest = { showDialog = false},
-            title = { Text(text = "Warning") },
-            text = { Text("Category name cant be empty") },
+            onDismissRequest = { viewModel.showDialog = false},
+            title = { Text(text = stringResource(R.string.warning)) },
+            text = { Text(stringResource(R.string.category_title_null_warning)) },
             confirmButton = {
-                Button({ showDialog = false }) {
-                    Text("OK", fontSize = 22.sp)
+                Button({ viewModel.showDialog = false }) {
+                    Text(stringResource(R.string.ok_text), fontSize = 22.sp)
                 }
             }
         )

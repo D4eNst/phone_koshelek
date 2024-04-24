@@ -28,11 +28,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.d4enst.laba_1_koshelek.addParams
@@ -41,6 +46,7 @@ import com.d4enst.laba_1_koshelek.navigation.Page
 import com.d4enst.laba_1_koshelek.navigation.PageParam
 import com.d4enst.laba_1_koshelek.ui.theme.Laba_1_koshelekTheme
 import com.d4enst.laba_1_koshelek.view_models.CategoryViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -48,6 +54,7 @@ fun PatternsList(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     getAllCategories: () -> Flow<List<Category>>,
+    deleteCategory: (category: Category) -> Job,
 ){
     Scaffold(
         topBar = {},
@@ -68,39 +75,74 @@ fun PatternsList(
         }
     ) { innerPadding ->
         Column (
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start,
             modifier = modifier
                 .padding(innerPadding)
         ) {
             val categoryList by getAllCategories().collectAsState(initial = emptyList())
-
+            Text(
+                text = stringResource(R.string.patern_list_title),
+                fontSize = 32.sp,
+                modifier = Modifier
+                    .padding(24.dp)
+            )
+            if (categoryList.isEmpty())
+                Text(
+                    text = stringResource(R.string.categories_not_found),
+                    fontSize = 32.sp,
+                    modifier = Modifier
+                        .padding(24.dp)
+                )
             LazyColumn(
-                modifier = Modifier.weight(.7F),
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Top
             ) {
                 items(categoryList) { category ->
-                    Card(
-                        onClick = {
-                            navController.navigate(
-                                Page.PATTERN_CRUD.route
-                                    .addParams(category.id.toString())
-                            )
-                        },
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .height(80.dp)
-                            .padding(vertical = 8.dp)
-                            .fillMaxSize(0.85f)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                        Card(
+                            onClick = {
 
+                            },
+                            modifier = Modifier
+                                .height(80.dp)
+                                .padding(vertical = 8.dp)
+                                .fillMaxSize(0.5f)
                         ) {
-                            Text(text = category.categoryName, style = MaterialTheme.typography.displaySmall)
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+
+                            ) {
+                                Text(text = category.categoryName, style = MaterialTheme.typography.displaySmall)
+
+                            }
+                        }
+                        Button(
+                            onClick = {
+                                navController.navigate(
+                                    Page.PATTERN_CRUD.route
+                                        .addParams(category.id.toString())
+                                )
+                            }
+                        ) {
+                            Icon(Icons.Filled.Info, contentDescription = stringResource(R.string.done_icon_description))
+                        }
+                        Button(
+                            onClick = {
+                                deleteCategory(category)
+                            }
+                        ) {
+                            Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.done_icon_description))
                         }
                     }
+
                 }
             }
         }
@@ -117,7 +159,9 @@ fun MainPreview() {
     Laba_1_koshelekTheme {
         PatternsList(
             navController,
-            getAllCategories = categoryViewModel::getAllCategories
+            Modifier,
+            categoryViewModel::getAllCategories,
+            categoryViewModel::deleteCategory,
         )
     }
 }

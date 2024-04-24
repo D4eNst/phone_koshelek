@@ -19,13 +19,16 @@ class CategoryRepository(
         = categoryLabelDao.getAllByCategoryId(categoryId)
 
     suspend fun addCategory(category: Category)
-        = categoryDao.addCategory(category)
+        = categoryDao.add(category)
+
+    suspend fun updateCategory(category: Category)
+        = categoryDao.update(category)
 
     suspend fun addMultipleCategoryLabels(categoryLabels: List<CategoryLabel>)
         = categoryLabelDao.addMultiple(categoryLabels)
 
     suspend fun deleteCategory(category: Category)
-            = categoryDao.deleteCategory(category)
+            = categoryDao.delete(category)
 
     suspend fun deleteAllCategoryLabelByCategoryId(categoryId: Long)
             = categoryLabelDao.deleteAllByCategoryId(categoryId)

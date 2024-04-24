@@ -13,7 +13,7 @@ interface CategoryLabelDao {
     suspend fun addCategoryLabel(categoryLabel: CategoryLabel): Long
 
     @Insert(CategoryLabel::class)
-    suspend fun addMultiple(categoryLabels: List<CategoryLabel>): List<Long>
+    suspend fun addMultiple(categoryLabels: List<CategoryLabel>)
 
     @Delete(CategoryLabel::class)
     suspend fun deleteCategoryLabel(categoryLabel: CategoryLabel)

@@ -15,4 +15,10 @@
     <string name="done_icon_description">Done icon</string>
     <string name="label_name_titile">Label name</string>
     <string name="edit_icon_description">Edit icon</string>
+    <string name="category_title_name_titile">Category name</string>
+    <string name="warning">Warning</string>
+    <string name="category_title_null_warning">Category title can\'t be null</string>
+    <string name="ok_text">Ok</string>
+    <string name="patern_list_title">List patterns</string>
+    <string name="categories_not_found">Dont have categories</string>
 </resources>

@@ -30,6 +30,7 @@ fun NavContent(
                 navController,
                 Modifier.fillMaxSize(),
                 categoryViewModel::getAllCategories,
+                categoryViewModel::deleteCategory
             )
         }
         composable(
