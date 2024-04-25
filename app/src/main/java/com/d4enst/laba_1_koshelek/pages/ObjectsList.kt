@@ -1,5 +1,6 @@
 package com.d4enst.laba_1_koshelek.pages
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,8 +65,11 @@ fun ObjectsList(
             FloatingActionButton(
                 onClick = {
                     navController.navigate(
-                        Page.PATTERN_CRUD.route
-                            .addParams(PageParam.DEFAULT_ID.value)
+                        Page.OBJECT_CRUD.route
+                            .addParams(
+                                category?.id?.toString() ?: "0",
+                                PageParam.DEFAULT_ID.value
+                            )
                     )
                 }
             ) {
@@ -83,12 +87,6 @@ fun ObjectsList(
                 .padding(innerPadding)
         ) {
             val objectsList by getObjectsByCategoryId(categoryId).collectAsState(initial = emptyList())
-            Text(
-                text = stringResource(R.string.objects_list_title),
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .padding(24.dp)
-            )
             if (objectsList.isEmpty())
                 Text(
                     text = stringResource(R.string.objects_not_found),

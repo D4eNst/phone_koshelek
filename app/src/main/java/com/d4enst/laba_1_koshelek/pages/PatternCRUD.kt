@@ -45,7 +45,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.d4enst.laba_1_koshelek.R
 import com.d4enst.laba_1_koshelek.view_models.CategoryViewModel
@@ -125,7 +124,7 @@ fun PatternCRUD(
                 state = listState,
                 contentPadding = PaddingValues(16.dp)
             ) {
-                itemsIndexed(viewModel.states) { i, _ ->
+                itemsIndexed(viewModel.categoryStates) { i, _ ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -134,12 +133,12 @@ fun PatternCRUD(
 
                     ) {
                         OutlinedTextField(
-                            value = viewModel.states[i],
+                            value = viewModel.categoryStates[i],
                             modifier = Modifier
                                 .padding(0.dp)
                                 .focusRequester(focusRequester),
                             onValueChange = {
-                                viewModel.states[i] = it
+                                viewModel.categoryStates[i] = it
                                 if (i == 0){
                                     viewModel.categoryNameInput = it
                                     viewModel.category.categoryName = it
@@ -153,7 +152,7 @@ fun PatternCRUD(
                                 )
                             },
                             keyboardOptions = KeyboardOptions(
-                                imeAction = if (i + 1 < viewModel.states.size) ImeAction.Next
+                                imeAction = if (i + 1 < viewModel.categoryStates.size) ImeAction.Next
                                             else ImeAction.Done
                             ),
                             keyboardActions = KeyboardActions(
@@ -169,7 +168,7 @@ fun PatternCRUD(
                                 }
                             ),
                         )
-                        if (i + 1 > 1 && viewModel.states.size > 2 && isEditable)
+                        if (i + 1 > 1 && viewModel.categoryStates.size > 2 && isEditable)
                             Button(
                                 onClick = {
                                     viewModel.removeLabelInUI(i)
@@ -178,7 +177,7 @@ fun PatternCRUD(
                                 Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.done_icon_description))
                             }
                     }
-                    if (i + 1 == viewModel.states.size && isEditable)
+                    if (i + 1 == viewModel.categoryStates.size && isEditable)
                         Button(
                             onClick = {
                                 viewModel.addLabelInUI()

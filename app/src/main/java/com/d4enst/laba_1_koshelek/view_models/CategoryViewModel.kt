@@ -1,14 +1,10 @@
 package com.d4enst.laba_1_koshelek.view_models
 
-import android.util.Log
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.focus.FocusRequester
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -19,9 +15,6 @@ import com.d4enst.laba_1_koshelek.MainApplication
 import com.d4enst.laba_1_koshelek.db.models.Category
 import com.d4enst.laba_1_koshelek.db.models.CategoryLabel
 import com.d4enst.laba_1_koshelek.db.repositories.CategoryRepository
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -36,13 +29,14 @@ class CategoryViewModel(
 
     private var categoryLabels by mutableStateOf<List<CategoryLabel>>(emptyList())
 
-    val states = mutableStateListOf("", "")
+    // Первый элемент - название категории, остальные - labels
+    val categoryStates = mutableStateListOf("", "")
 
     fun getAllCategories(): Flow<List<Category>>
-            = categoryRepository.getAllCategories()
+        = categoryRepository.getAllCategories()
 
     private fun getCategoryById(categoryId: Long)
-            = categoryRepository.getCategoryById(categoryId)
+        = categoryRepository.getCategoryById(categoryId)
 
     private suspend fun addCategory(category: Category)
         = categoryRepository.addCategory(category)
@@ -71,7 +65,7 @@ class CategoryViewModel(
             {
                 category = it
                 categoryNameInput = category.categoryName
-                states[0] = categoryNameInput
+                categoryStates[0] = categoryNameInput
             }
         }
     }
@@ -80,8 +74,8 @@ class CategoryViewModel(
             if (labels.isNotEmpty())
             {
                 categoryLabels = labels
-                states.removeRange(1, states.size)
-                states.addAll(categoryLabels.map { it.categoryLabelName })
+                categoryStates.removeRange(1, categoryStates.size)
+                categoryStates.addAll(categoryLabels.map { it.categoryLabelName })
             }
         }
     }
@@ -101,7 +95,7 @@ class CategoryViewModel(
                     // Удаление всех CategoryLabel и создание заново
                     deleteAllCategoryLabelByCategoryId(newCategoryId)
                     addMultipleCategoryLabel(
-                        states.subList(1, states.size).map {
+                        categoryStates.subList(1, categoryStates.size).map {
                             CategoryLabel(0L, it, newCategoryId)
                         }
                     )
@@ -120,15 +114,15 @@ class CategoryViewModel(
     }
 
     fun removeLabelInUI(i: Int) {
-        states.removeAt(index = i)
+        categoryStates.removeAt(index = i)
         // Пользователь может использовать двойное нажатие и удалить сразу несколько строк
         // Перестраховываюсь и добавляю поле, если он удалил все
-        if (states.size <= 1)
-            states.add("")
+        if (categoryStates.size <= 1)
+            categoryStates.add("")
     }
 
     fun addLabelInUI() {
-        states.add("")
+        categoryStates.add("")
     }
 
     companion object {

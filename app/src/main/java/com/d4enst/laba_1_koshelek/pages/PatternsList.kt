@@ -80,12 +80,6 @@ fun PatternsList(
                 .padding(innerPadding)
         ) {
             val categoryList by getAllCategories().collectAsState(initial = emptyList())
-            Text(
-                text = stringResource(R.string.patern_list_title),
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .padding(24.dp)
-            )
             if (categoryList.isEmpty())
                 Text(
                     text = stringResource(R.string.categories_not_found),

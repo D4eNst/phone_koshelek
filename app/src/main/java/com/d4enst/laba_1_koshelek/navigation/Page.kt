@@ -4,6 +4,7 @@ enum class Page(val route: String) {
     PATTERNS_LIST("patterns_list"),
     PATTERN_CRUD("pattern_crud"),
     OBJECTS_LIST("objects_list"),
+    OBJECT_CRUD("object_crud"),
 }
 
 enum class PageParam(val value: String) {

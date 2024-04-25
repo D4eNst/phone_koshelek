@@ -1,5 +1,10 @@
 package com.d4enst.laba_1_koshelek.view_models
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -14,6 +19,18 @@ class ObjectViewModel (
     private val objectRepository: ObjectRepository,
 ) : ViewModel() {
 
+    var showDialog by mutableStateOf(false)
+
+    var categoryId = 0L
+
+    var currentObjectId by mutableLongStateOf(0)
+    var categoryObject by mutableStateOf(CategoryObject(categoryId = categoryId))
+
+    var categoryObjectNameInput by mutableStateOf(categoryObject.categoryObjectName)
+
+    val categoryObjectsSates = mutableStateListOf("", "")
+    var categoryLabelsStates = mutableStateListOf("", "")
+
     fun getObjectsByCategoryId(categoryId: Long)
         = objectRepository.getObjectsByCategoryId(categoryId)
 
@@ -27,6 +44,23 @@ class ObjectViewModel (
         // TODO delete all object values
         objectRepository.deleteObject(categoryObject)
     }
+
+    fun collectObject() {
+        // TODO("Not yet implemented")
+    }
+
+    fun collectCategoryLabels() {
+        // TODO("Not yet implemented")
+    }
+
+    fun collectObjectsValues() {
+        // TODO("Not yet implemented")
+    }
+
+    fun createOrChangeCategoryObject(editable: Boolean): Boolean {
+        return false
+    }
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
