@@ -9,9 +9,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.d4enst.laba_1_koshelek.addParams
+import com.d4enst.laba_1_koshelek.pages.ObjectsList
 import com.d4enst.laba_1_koshelek.pages.PatternCRUD
 import com.d4enst.laba_1_koshelek.pages.PatternsList
 import com.d4enst.laba_1_koshelek.view_models.CategoryViewModel
+import com.d4enst.laba_1_koshelek.view_models.ObjectViewModel
 
 @Composable
 fun NavContent(
@@ -33,8 +36,9 @@ fun NavContent(
                 categoryViewModel::deleteCategory
             )
         }
+
         composable(
-            Page.PATTERN_CRUD.route + "/{categoryId}",
+            Page.PATTERN_CRUD.route.addParams("{categoryId}"),
             arguments = listOf(
                 navArgument("categoryId") { type = NavType.LongType },
             )
@@ -46,6 +50,24 @@ fun NavContent(
                 Modifier.fillMaxSize(),
                 categoryId,
                 categoryViewModel,
+            )
+        }
+
+        composable(
+            Page.OBJECTS_LIST.route.addParams("{categoryId}"),
+            arguments = listOf(
+                navArgument("categoryId") { type = NavType.LongType },
+            )
+        ) {
+            val objectViewModel: ObjectViewModel = viewModel(factory = ObjectViewModel.Factory)
+            val categoryId = it.arguments?.getLong("categoryId") ?: 0L
+            ObjectsList(
+                navController,
+                Modifier.fillMaxSize(),
+                categoryId,
+                objectViewModel::getObjectsByCategoryId,
+                objectViewModel::deleteObject,
+                objectViewModel::getCategoryById
             )
         }
     }

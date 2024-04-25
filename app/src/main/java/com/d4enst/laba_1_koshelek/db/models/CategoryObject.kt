@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "category_object", foreignKeys = [
+@Entity(tableName = "category_objects", foreignKeys = [
     ForeignKey(
         entity = Category::class,
         parentColumns = ["id"],

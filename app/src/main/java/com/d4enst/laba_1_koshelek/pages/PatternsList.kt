@@ -12,21 +12,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.d4enst.laba_1_koshelek.R
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -34,6 +32,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,7 +62,7 @@ fun PatternsList(
                 onClick = {
                     navController.navigate(
                         Page.PATTERN_CRUD.route
-                            .addParams(PageParam.DEFAULT_CATEGORY.value)
+                            .addParams(PageParam.DEFAULT_ID.value)
                     )
                 }
             ) {
@@ -104,24 +103,34 @@ fun PatternsList(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
+                            .wrapContentSize()
+                            .fillMaxHeight()
                     ) {
                         Card(
                             onClick = {
-
+                                navController.navigate(
+                                    Page.OBJECTS_LIST.route
+                                        .addParams(category.id.toString())
+                                )
                             },
                             modifier = Modifier
                                 .height(80.dp)
                                 .padding(vertical = 8.dp)
-                                .fillMaxSize(0.5f)
+                                .fillMaxWidth(0.5f)
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .fillMaxSize(),
-                                contentAlignment = Alignment.Center
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center,
 
                             ) {
-                                Text(text = category.categoryName, style = MaterialTheme.typography.displaySmall)
-
+                                Text(
+                                    text = category.categoryName,
+                                    style = MaterialTheme.typography.displaySmall,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                    )
                             }
                         }
                         Button(

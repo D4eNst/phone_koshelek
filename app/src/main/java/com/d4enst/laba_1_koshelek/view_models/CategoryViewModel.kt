@@ -32,13 +32,17 @@ class CategoryViewModel(
     var showDialog by mutableStateOf(false)
     var currentCategoryId by mutableLongStateOf(0)
     var category by mutableStateOf(Category())
-    var categoryLabels by mutableStateOf<List<CategoryLabel>>(emptyList())
     var categoryNameInput by mutableStateOf(category.categoryName)
+
+    private var categoryLabels by mutableStateOf<List<CategoryLabel>>(emptyList())
 
     val states = mutableStateListOf("", "")
 
     fun getAllCategories(): Flow<List<Category>>
             = categoryRepository.getAllCategories()
+
+    private fun getCategoryById(categoryId: Long)
+            = categoryRepository.getCategoryById(categoryId)
 
     private suspend fun addCategory(category: Category)
         = categoryRepository.addCategory(category)
@@ -52,9 +56,6 @@ class CategoryViewModel(
     private suspend fun deleteAllCategoryLabelByCategoryId(categoryId: Long)
         = categoryRepository.deleteAllCategoryLabelByCategoryId(categoryId)
 
-    private fun getCategoryById(categoryId: Long)
-            = categoryRepository.getCategoryById(categoryId)
-
     private fun getAllCategoryLabelsByCategoryId(categoryId: Long)
             = categoryRepository.getAllCategoryLabelsByCategoryId(categoryId)
 
@@ -66,7 +67,6 @@ class CategoryViewModel(
     // Обновление категории из бд
     suspend fun collectCategory() {
         this.getCategoryById(currentCategoryId).collect {
-            Log.w("collectCategory", "here")
             if (it != null)
             {
                 category = it
@@ -77,7 +77,6 @@ class CategoryViewModel(
     }
     suspend fun collectCategoryLabels() {
         this.getAllCategoryLabelsByCategoryId(currentCategoryId).collect { labels ->
-            Log.w("collectCategoryLabels", "here")
             if (labels.isNotEmpty())
             {
                 categoryLabels = labels
