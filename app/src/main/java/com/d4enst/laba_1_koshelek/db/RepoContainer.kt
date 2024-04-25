@@ -16,8 +16,9 @@ class RepoContainer(private val context: Context) {
         val db = Database.getDatabase(context)
         ObjectRepository (
             db.getCategoryObjectDao(),
-            db.getObjectValueDao(),
+            db.getCategoryLabelDao(),
             db.getCategoryDao(),
+            db.getObjectValueDao(),
         )
     }
 }

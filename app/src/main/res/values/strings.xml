@@ -23,4 +23,5 @@
     <string name="categories_not_found">Dont have categories</string>
     <string name="objects_not_found">No one objects yet!</string>
     <string name="objects_list_title">Objects list</string>
+    <string name="object_title_name_titile">Object title</string>
 </resources>

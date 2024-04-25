@@ -107,7 +107,13 @@ fun ObjectsList(
                     ) {
                         Card(
                             onClick = {
-
+                                navController.navigate(
+                                    Page.OBJECT_CRUD.route
+                                        .addParams(
+                                            category?.id?.toString() ?: "0",
+                                            categoryObject.id.toString()
+                                        )
+                                )
                             },
                             modifier = Modifier
                                 .height(80.dp)
@@ -127,20 +133,17 @@ fun ObjectsList(
 
                             }
                         }
-                        Button(
+//                        Button(
 //                        onClick = {
-//                            navController.navigate(
-//                                Page.PATTERN_CRUD.route
-//                                    .addParams(categoryObject.id.toString())
+//
+//                        }
+//
+//                        ) {
+//                            Icon(
+//                                Icons.Filled.Info,
+//                                contentDescription = stringResource(R.string.done_icon_description)
 //                            )
 //                        }
-                            {}
-                        ) {
-                            Icon(
-                                Icons.Filled.Info,
-                                contentDescription = stringResource(R.string.done_icon_description)
-                            )
-                        }
                         Button(
                             onClick = {
                                 deleteObject(categoryObject)

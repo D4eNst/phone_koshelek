@@ -4,14 +4,14 @@ import com.d4enst.laba_1_koshelek.db.dao.CategoryDao
 import com.d4enst.laba_1_koshelek.db.dao.CategoryLabelDao
 import com.d4enst.laba_1_koshelek.db.dao.CategoryObjectDao
 import com.d4enst.laba_1_koshelek.db.dao.ObjectValueDao
-import com.d4enst.laba_1_koshelek.db.models.Category
-import com.d4enst.laba_1_koshelek.db.models.CategoryLabel
 import com.d4enst.laba_1_koshelek.db.models.CategoryObject
+import com.d4enst.laba_1_koshelek.db.models.ObjectValue
 
 class ObjectRepository(
     private val categoryObjectDao: CategoryObjectDao,
-    private val categoryLabelDao: ObjectValueDao,
+    private val categoryLabelDao: CategoryLabelDao,
     private val categoryDao: CategoryDao,
+    private val objectValueDao: ObjectValueDao,
 ) {
     fun getObjectsByCategoryId(categoryId: Long)
         = categoryObjectDao.getByCategoryId(categoryId)
@@ -22,8 +22,26 @@ class ObjectRepository(
     fun getCategoryById(categoryId: Long)
         = categoryDao.getById(categoryId)
 
+    fun getAllCategoryLabelsByCategoryId(categoryId: Long)
+        = categoryLabelDao.getAllByCategoryId(categoryId)
+
+    fun getAllObjectValues(categoryObjectId: Long)
+        = objectValueDao.getByCategoryAndLabelId(categoryObjectId)
+
+    suspend fun addObject(categoryObject: CategoryObject)
+        = categoryObjectDao.add(categoryObject)
+
+    suspend fun updateObject(categoryObject: CategoryObject)
+        = categoryObjectDao.update(categoryObject)
+
     suspend fun deleteObject(categoryObject: CategoryObject)
         = categoryObjectDao.delete(categoryObject)
+
+    suspend fun addMultipleObjectValues(objectValues: List<ObjectValue>)
+        = objectValueDao.addMultiple(objectValues)
+    suspend fun deleteAllObjectValues(categoryObjectId: Long)
+        = objectValueDao.deleteObjectValue(categoryObjectId)
+
 
 //    fun getAllCategoryLabelsByCategoryId(categoryId: Long)
 //        = categoryLabelDao.getAllByCategoryId(categoryId)

@@ -60,7 +60,7 @@ class CategoryViewModel(
 
     // Обновление категории из бд
     suspend fun collectCategory() {
-        this.getCategoryById(currentCategoryId).collect {
+        getCategoryById(currentCategoryId).collect {
             if (it != null)
             {
                 category = it

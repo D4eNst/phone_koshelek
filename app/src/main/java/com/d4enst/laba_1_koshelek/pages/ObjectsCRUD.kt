@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.d4enst.laba_1_koshelek.R
+import com.d4enst.laba_1_koshelek.db.dao.CategoryLabelDao
+import com.d4enst.laba_1_koshelek.db.models.CategoryLabel
 import com.d4enst.laba_1_koshelek.view_models.ObjectViewModel
 import kotlinx.coroutines.launch
 
@@ -58,8 +61,11 @@ fun ObjectCRUD(
     viewModel: ObjectViewModel,
 ){
     var isEditable by remember { mutableStateOf(objectId == 0L) }
-    viewModel.categoryId = categoryId
+    viewModel.categoryObject.categoryId = categoryId
     viewModel.currentObjectId = objectId
+
+//    val categoryLabels by viewModel.getAllCategoryLabelsByCategoryId(categoryId)
+//        .collectAsState(initial = emptyList())
 
     LaunchedEffect(viewModel.currentObjectId) {
         viewModel.collectObject()
@@ -128,7 +134,13 @@ fun ObjectCRUD(
                 state = listState,
                 contentPadding = PaddingValues(16.dp)
             ) {
-                itemsIndexed(viewModel.categoryObjectsSates) { i, _ ->
+                itemsIndexed(viewModel.categoryObjectsStates) { i, _ ->
+                    if (i > 0)
+                        Text(
+                            text = viewModel.categoryLabelsStates[i-1].categoryLabelName,
+                            modifier = Modifier
+                                .padding(start = 24.dp, end = 16.dp, top = 16.dp)
+                        )
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -137,12 +149,12 @@ fun ObjectCRUD(
 
                     ) {
                         OutlinedTextField(
-                            value = viewModel.categoryObjectsSates[i],
+                            value = viewModel.categoryObjectsStates[i],
                             modifier = Modifier
                                 .padding(0.dp)
                                 .focusRequester(focusRequester),
                             onValueChange = {
-                                viewModel.categoryObjectsSates[i] = it
+                                viewModel.categoryObjectsStates[i] = it
                                 if (i == 0){
                                     viewModel.categoryObjectNameInput = it
                                     viewModel.categoryObject.categoryObjectName = it
@@ -150,13 +162,11 @@ fun ObjectCRUD(
                             },
                             enabled = isEditable,
                             label = {
-                                Text(
-                                    if (i == 0) stringResource(R.string.category_title_name_titile)
-                                    else "${stringResource(R.string.label_name_titile)} $i"
-                                )
+                                if (i == 0)
+                                    Text(stringResource(R.string.object_title_name_titile))
                             },
                             keyboardOptions = KeyboardOptions(
-                                imeAction = if (i + 1 < viewModel.categoryObjectsSates.size) ImeAction.Next
+                                imeAction = if (i + 1 < viewModel.categoryObjectsStates.size) ImeAction.Next
                                 else ImeAction.Done
                             ),
                             keyboardActions = KeyboardActions(

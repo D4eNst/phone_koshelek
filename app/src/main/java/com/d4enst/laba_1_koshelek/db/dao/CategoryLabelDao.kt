@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryLabelDao {
     @Insert(CategoryLabel::class)
-    suspend fun addCategoryLabel(categoryLabel: CategoryLabel): Long
-
-    @Insert(CategoryLabel::class)
     suspend fun addMultiple(categoryLabels: List<CategoryLabel>)
 
     @Delete(CategoryLabel::class)
